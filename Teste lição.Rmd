@@ -1,6 +1,8 @@
 ---
 title: "Teste lição"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 date: "2026-03-24"
 ---
 
@@ -16,4 +18,23 @@ Lista numerada:
 valores <- c(10, 20, 30, 40, 50)
 media <- mean(valores)
 media
+```
+
+```{r echo = FALSE}
+library(knitr)
+library(tidyverse)
+dados <- readRDS("C:/Users/Gustavo/Downloads/pib_cid.RDS")
+kable(head(dados, 10))
+```
+
+**GRÁFICO PPIB POR REGIÃO**
+
+```{r echo = FALSE}
+dados %>%
+  group_by(nome_regiao) %>%
+  summarise(pib_total = sum(pib_total, na.rm = TRUE)) %>%
+  ggplot(aes(x = nome_regiao, y = pib_total)) + geom_col() +
+  labs(title = "PIB total por região", x = "Região", y = "PIB total") +
+  scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
+  theme_minimal()
 ```
