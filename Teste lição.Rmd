@@ -1,0 +1,19 @@
+---
+title: "Teste lição"
+output: pdf_document
+date: "2026-03-24"
+---
+
+**Texto Negrito** e *Texto itálico*
+
+Lista numerada:
+
+1. Item 1
+2. Item 2
+3. Item 3
+
+```{r}
+valores <- c(10, 20, 30, 40, 50)
+media <- mean(valores)
+media
+```
