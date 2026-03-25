@@ -1,6 +1,7 @@
 ---
 title: "Lição 2 e 3"
 output:
+  pdf_document: default
   html_document:
     df_print: paged
 date: "2026-03-24"
