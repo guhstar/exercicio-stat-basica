@@ -1,10 +1,156 @@
 ---
-title: "Teste lição"
+title: "Lição 2 e 3"
 output:
   html_document:
     df_print: paged
 date: "2026-03-24"
 ---
+**EXERCÍCIO 2**
+
+Carregando pacotes
+
+```{r}
+library(ggplot2)
+library(tidyverse)
+library(dplyr)
+library(knitr)
+library(kableExtra)
+```
+Importação de dados
+
+**Ex 1**
+
+```{r}
+municipios <- read.csv("C:/Users/Gustavo/Downloads/municipios_virgula.csv")
+View(municipios)
+str(municipios)
+```
+
+R: temos 15 municípios divididos em 5 colunas: nome_municipio, uf, populacao, idh e pib_per_capita
+
+**Ex 2**
+
+```{r}
+# <- read.csv("C:/Users/Gustavo/Downloads/municipios_pontovirgula.csv")
+
+municipos2 <- read.csv2("C:/Users/Gustavo/Downloads/municipios_pontovirgula.csv",
+                        fileEncoding = "latin1")
+```
+
+R: primeiro aparece erro de leitura do código porque não é a formatação padrão de leitura dos arquivos csv. Comumente é observado em csvs a repartição de itens por vírgulas, não ponto e vírgula e as variaveis não inteiras tem os algarismos decimais partidos por ponto final, não vírgula como na língua brasileira.
+
+**Ex 3**
+
+```{r}
+eleicoes22 <- read.csv("C:/Users/Gustavo/Downloads/eleicoes_2022.csv")
+filter(eleicoes22, municipio == "Pau D'Arco")
+```
+
+R: A importação deu certo
+
+**Ex 4**
+
+```{r}
+IDH_municipios <- read.csv2("C:/Users/Gustavo/Downloads/idh_municipios.csv",
+                            fileEncoding = "latin1")
+str(IDH_municipios)
+```
+
+R: Sim, são numéricas
+
+**Ex 6**
+
+```{r}
+municipios %>%
+  ggplot(aes(x = idh, y = reorder(nome_municipio, idh))) + geom_col() +
+  xlab("IDH") + ylab("Município") +
+  theme_light() + theme(text=element_text(size = 20)) +
+  ggtitle("IDH dos municípios em ordem\ndo maior para o menor")
+```
+
+R: Florianópolis apresenta maior IDH e Pau D'Arco menor IDH
+
+**Ex 7**
+
+```{r}
+df <- municipios %>%
+  summarise('populacao total' = sum(populacao),
+            'populacao media' = mean(populacao))
+kable(df)
+```
+
+R: Temos soma igual a 36601670 e média 2440111
+
+**Ex 8**
+
+```{r}
+df <- eleicoes22 %>%
+  group_by(candidato) %>%
+  summarise(soma_candidatos = sum(votos)) %>%
+  arrange(desc(soma_candidatos))
+kable(df)
+```
+
+R: Essa é a votação final, indicando "Lula" como vencedor
+
+**Ex 9**
+
+```{r}
+df <- IDH_municipios %>%
+  group_by(regiao) %>%
+  summarise(soma_idh = mean(idh_2010)) %>%
+  arrange(desc(soma_idh))
+kable(df)
+```
+
+R: Sul tem maior IDH médio e Norte menor IDH médio
+
+**Ex 10**
+
+```{r}
+df <- eleicoes22 %>%
+  group_by(municipio) %>%
+  slice_max(order_by = votos) %>%
+  ungroup() %>%
+  mutate(vencedor = candidato)
+kable(df)
+```
+
+R: Exceto por Florianópolis e São Jóse dos Campos, que indicam "Bolsonaro" como vencedor, os demais municípios apresentam vitória de "Lula"
+
+**Ex 13**
+
+```{r}
+municipios %>%
+  ggplot(aes(x = reorder(nome_municipio, populacao), y = populacao)) + geom_col() +
+  xlab("Município") + ylab("População") + coord_flip() +
+  theme_light() + theme(text = element_text(size = 20)) +
+  ggtitle("População dos municípios em ordem\ndo menor para o maior") +
+  scale_y_continuous(labels = scales::label_number(accuracy = 1))
+```
+
+R: São Paulo apresenta população muito numericamente superior que o Rio de Janeiro, que também é 2 vezes maior numericamente que Fortaleza, terceiro na ordem, mantendo uma decrescente gradual menos exorbitante que os primeiros dois mencionados
+
+**Ex 14**
+
+```{r}
+IDH_municipios %>%
+  ggplot(aes(x = idh_educacao, y = idh_renda, color = regiao)) + geom_point() +
+  xlab("IDH na Educação") + ylab("IDH na Renda") +
+  theme_light() + theme(text=element_text(size = 20)) +
+  ggtitle("IDH na educação e na renda por municípios")
+```
+
+R: Sul, Suldeste e Centro-Oeste apresentam IDH de renda e de educação maiores do que as regiões Norte e Nordeste
+
+
+**EXERCÍCIO 3**
+
+**Ex 1:5**
+
+Link para github referente aos exercícios sobre github: https://github.com/guhstar/exercicio-stat-basica
+
+**Ex 5 e 6 (? Markdown)**
 
 **Texto Negrito** e *Texto itálico*
 
@@ -20,14 +166,16 @@ media <- mean(valores)
 media
 ```
 
+R: Média calculada com sucesso, lista feita e textos realizados
+
+**Ex 7**
+
 ```{r echo = FALSE}
-library(knitr)
-library(tidyverse)
 dados <- readRDS("C:/Users/Gustavo/Downloads/pib_cid.RDS")
 kable(head(dados, 10))
 ```
 
-**GRÁFICO PPIB POR REGIÃO**
+**GRÁFICO PIB POR REGIÃO**
 
 ```{r echo = FALSE}
 dados %>%
@@ -38,3 +186,5 @@ dados %>%
   scale_y_continuous(labels = scales::label_number(accuracy = 1)) +
   theme_minimal()
 ```
+
+R: Feito!!
